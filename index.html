@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rolagem de Dados</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        .result {
+            font-size: 40px;
+            margin-top: 20px;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+        .result.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .button {
+            font-size: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .input-container {
+            margin: 20px;
+        }
+        input {
+            width: 50px;
+            text-align: center;
+            font-size: 18px;
+        }
+        .sum-input {
+            width: 100px;
+            text-align: center;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Rolar Dados</h1>
+    <div class="input-container">
+        <label for="d4">D4:</label>
+        <input type="number" id="d4" value="0" min="0">
+        <label for="d6">D6:</label>
+        <input type="number" id="d6" value="0" min="0">
+        <label for="d8">D8:</label>
+        <input type="number" id="d8" value="0" min="0">
+        <label for="d20">D20:</label>
+        <input type="number" id="d20" value="0" min="0">
+    </div>
+    <div class="input-container">
+        <label for="sum">Adicionar valor:</label>
+        <input type="number" id="sum" class="sum-input" value="0">
+    </div>
+    <button class="button" onclick="rollAllDice()">Rolar Dados</button>
+    <p id="result" class="result"></p>
+
+    <script>
+        function rollAllDice() {
+            let diceTypes = {4: "d4", 6: "d6", 8: "d8", 20: "d20"};
+            let resultElement = document.getElementById("result");
+            resultElement.classList.remove('show');
+            
+            setTimeout(() => {
+                let results = [];
+                let total = 0;
+                
+                // Rolar os dados
+                for (let sides in diceTypes) {
+                    let numDice = parseInt(document.getElementById(diceTypes[sides]).value) || 0;
+                    for (let i = 0; i < numDice; i++) {
+                        let roll = Math.floor(Math.random() * sides) + 1;
+                        results.push(`${sides}L: ${roll}`);
+                        total += roll;
+                    }
+                }
+                
+                // Obter valor extra para somar
+                let extraSum = parseInt(document.getElementById("sum").value) || 0;
+                total += extraSum;
+
+                resultElement.textContent = results.length > 0 ? 
+                    "Resultados: " + results.join(", ") + " (Total: " + total + ")" : 
+                    "Nenhum dado selecionado";
+
+                setTimeout(() => {
+                    resultElement.classList.add('show');
+                }, 200);
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
+
+
